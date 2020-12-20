@@ -57,6 +57,7 @@ function StartScreen({navigation}) {
 
     const OriginalPrice=(value)=>{
       setOPrice(value);
+      setDPercentage("");
     }
 
     const DiscountPercentage=(value)=>{
@@ -121,7 +122,7 @@ const HistoryScreen = ({navigation,route}) =>{
   
   const removeItem = (itemKey) =>{
     var list = newHistory.filter(item => item.key != itemKey);
-    setNewHistory();
+    setNewHistory([list]);
   }
 
 
@@ -210,10 +211,10 @@ const styles = StyleSheet.create({
   },
   scrollView:{
     width:'100%',
-    
+    flexDirection:"column"
   },
   scrollviewItem:{
-    flexDirection:'row',
+    flexDirection:"column",
     justifyContent:"space-between",
     width:'100%',
     margin:5,
