@@ -16,7 +16,7 @@ function StartScreen({navigation}) {
   React.useLayoutEffect(() =>{
     navigation.setOptions({
       headerRight : ()=>(
-        <Button title="History" onPress={() =>navigation.navigate("History",{history:getHistory})}/>
+        <Button title="History" onPress={() =>navigation.navigate("History",{getHistory})}/>
       )
     })
   });
@@ -41,7 +41,7 @@ function StartScreen({navigation}) {
    } 
   
   const countDiscountPrice = (Percentage,Price) =>{
-      if(Percentage > 99){
+      if(Percentage >= 100){
         alert("Discount Percentage cannot be greater or equal to Original Price");
       }
       else if(isNaN(Price) || isNaN(Percentage)){
@@ -61,18 +61,11 @@ function StartScreen({navigation}) {
     }
 
     const DiscountPercentage=(value)=>{
-      
-      
-      console.log("Setting State with Value: " + value);
       setDPercentage(value);
-      console.log("After Updating State: " + getDPercentage);
       const price = getOPrice
       countDiscountPrice(getDPercentage,price);
     }
-    useEffect( () => {
-      // This will print updated state and will be called after state is updated OR Rerendering
-      console.log("After Updating State and Rerendering (inside UseEffect): " + getDPercentage);
-    });
+
 
     return (
     <View style={styles.container}>
@@ -101,7 +94,7 @@ function StartScreen({navigation}) {
 };
 
 const HistoryScreen = ({navigation,route}) =>{
-  const [newHistory,setNewHistory] = useState([route.params.history]);
+  const [newHistory,setNewHistory] = useState([route.params.getHistory]);
 
   React.useLayoutEffect(() =>{
     navigation.setOptions({
@@ -111,6 +104,7 @@ const HistoryScreen = ({navigation,route}) =>{
     })
   });
 
+
   const onClear = () =>{
     if(newHistory.length.toString() == 0 ){
       alert("Empty");
@@ -119,33 +113,26 @@ const HistoryScreen = ({navigation,route}) =>{
       setNewHistory([]);
     }
   }
-  
+
+
   const removeItem = (itemKey) =>{
     var list = newHistory.filter(item => item.key != itemKey);
-    setNewHistory([list]);
+    setNewHistory(list);
   }
-
-
-
 
   return(
     <View style={styles.container}>
       <Text style={{padding:10,borderWidth:2,fontWeight:'bold',backgroundColor:"#128C7E"}}>Original Price  -   Discount Percentage     =   Final Price</Text>
-     
-     
-     <ScrollView style={styles.scrollView}>
-          {newHistory.map((item) =>
-             <View style={styles.scrollviewItem}>
-              <Text style={styles.scrollText}>{item}</Text>
-              <TouchableOpacity key={item.key} onPress={() => removeItem(item.key)}> 
-                <View style={styles.crosstextContainer}>
-                  <Text style={styles.crosstext}>X</Text>
-                </View>
-              </TouchableOpacity>
-            </View>
-          )}
-          </ScrollView>
-
+          
+       <ScrollView style={styles.scrollView}>
+            {newHistory.map((item) =>
+               <View style={styles.scrollviewItem}>  
+                <TouchableOpacity key={item.key} onPress={() => removeItem(item.key)}>
+                  <Text style={styles.scrollText}>{item}</Text>
+                </TouchableOpacity>
+             </View>
+            )}
+      </ScrollView>
     </View>
   );
 }
@@ -197,17 +184,12 @@ const styles = StyleSheet.create({
     width:"80%",
     padding:10
   },
-  crosstext:{
-    fontSize:26,
-    color:'red',
-    padding:10,
-    fontWeight:'bold'
-  },
   scrollText:{
     padding:20,
     fontSize:20,
     color:'white',
-    textAlign:"center"
+    textAlign:"center",
+    flexDirection:"column"
   },
   scrollView:{
     width:'100%',
